@@ -63,9 +63,9 @@ UserGrid is an open source web API builder that sits on top of mongodb and serve
 
 ### API
 
-https://api.usergrid.com/kindasimple/test/
-https://api.usergrid.com/kindasimple/test/crawlers
-https://api.usergrid.com/kindasimple/test/surveys
+https://api.usergrid.com/kindasimple/test/  
+https://api.usergrid.com/kindasimple/test/crawlers  
+https://api.usergrid.com/kindasimple/test/surveys  
 
 
 ### Authentication
@@ -73,7 +73,8 @@ For now, I will put the keys here. But, they should be shared privately.
 
 orgName:'kindasimple',  
 appName:'test',  
-clientId:'YXA683_ECmEOEeO9RyltH18s1A',        clientSecret:'YXA6S3noKEhvSK65VGNmeCWXFn6UmjQ'
+clientId:'YXA683_ECmEOEeO9RyltH18s1A',  
+clientSecret:'YXA6S3noKEhvSK65VGNmeCWXFn6UmjQ'
 
 ### Node Website
 
@@ -87,4 +88,4 @@ Install node, and serve the website.
 node app.js
 ```
 
-go to http://localhost:3000 in the browser, and see that it doesn't work.
+go to http://localhost:9000 in the browser, and see that it doesn't work.
