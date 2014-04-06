@@ -33,10 +33,10 @@ The run script does two things. It runs a local website that serves the Solver A
 ```
 node worker.js &
 ```
-and it exposes this server to the internet via ngrok at http://crawlr.ngrok.com
+and it exposes this server to the internet via ngrok at http://crawlrAPI.ngrok.com
 
 ```
-./ngrok -subdomain=crawlr -authtoken hdqL9zl1QZrLl8c84HzX 5002
+./ngrok -subdomain=crawlrAPI -authtoken hdqL9zl1QZrLl8c84HzX 5002
 ```
 
 ### Endpoings
