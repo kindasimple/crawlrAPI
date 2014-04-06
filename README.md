@@ -61,7 +61,7 @@ and it exposes this server to the internet via ngrok at http://crawlrAPI.ngrok.c
 
 ### Endpoings
 
-**/route/start_bar**
+**/route/:start_bar**
 
 Input the starting bar, and pass it to the R script. It creates and returns a guid used to name the file.
 
@@ -82,10 +82,13 @@ result <- c('Zeno', 'Pickles', 'Levels');
 write(result, "result.log")
 ```
 
-**/result**
+**/result/:guid**
 
-This enpoint reads the result of the search from a file on the disk, and serves it up as json.
+This endpoint reads the result of the search from a file on the disk, and serves it up as json. The guid is returned from a request to the /route endpoint.
 
+**Network Graph**
+
+An image is generated as a png in the public folder, and can be accessed as `http://crawlrAPI.ngrok.com/<< guid >>.png (e.g. http://crawlr.ngrok.com/8cb387f6-2fec-92f8-172e-ef1e20fb4cf0.png)
 
 ##UserGrid BaaS
 
