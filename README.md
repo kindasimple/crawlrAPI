@@ -15,6 +15,26 @@ Have the following installed
 - ngrok (for your OS)
 - Node
 
+
+run `npm install` to update all node dependencies. Then get all R dependencies with
+
+```
+#Packages installer
+ipak <- function(pkg){
+    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+
+    if (length(new.pkg)) 
+        install.packages(new.pkg, dependencies = TRUE)
+    sapply(pkg, require, character.only = TRUE)
+}
+ 
+# usage
+packages <- c("calibrate")
+ipak(packages)
+```
+
+
+
 Execute `./run.sh` to start the worker website, and expose it using ngrok. 
 
 ```
