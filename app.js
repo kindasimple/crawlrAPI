@@ -1,40 +1,77 @@
+
+/**
+ * Module dependencies.
+ */
+
+var express = require('express');
+var routes = require('./routes');
+var user = require('./routes/user');
 var http = require('http');
-var usergrid = require('usergrid');
+var path = require('path');
 
-console.log('node.js application starting...');
+var sys = require('sys')
+var exec = require('child_process').exec;
+var fs = require('fs');
+var app = express();
 
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
 
-var svr = http.createServer(function(req, resp) {
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
 
-	var client = new usergrid.client({
-      orgName:'kindasimple',
-        appName:'crawlr',
-        authType:usergrid.AUTH_CLIENT_ID,
-        clientId:'YXA6HcF4ELx5EeOsOJX970-5zQ',
-        clientSecret:'YXA6-Z3TRZKUcF7AJxAEtYGUryaX0e8',
-        logging: true, //optional - turn on logging, off by default
-        buildCurl: false //optional - turn on curl commands, off by default
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+var toJson = function (data) {
+	return { 
+		bars: data.split('\n') 
+	};
+}
+
+//http://crawlr.ngrok.com/route/bar%20blue/result
+app.get('/route/result/:bar', function(req, res){
+
+	var bar = req.param("bar");
+
+	fs.readFile('./public/' + bar + '.log', 'utf8', function (err,data) {
+		if (err) {
+			return console.log(err);
+		}
+
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(data);
+		res.end();
 	});
 
-	var options = {
-	    type:'crawler',
-	}
 
-	client.getEntity(options, function(err, crawler){
-	    if (err){
-	        //error - existing user not retrieved
-	        console.log('error getting entity: ' + err)
-	        resp.end('Error occurred')
-	    } else {
-	        //success - existing user was retrieved
-			console.log('success executing query')
-	        var email = crawler.get('email');
-	        resp.end(email);
-	    }
-	});
-      
 });
 
-svr.listen(9000, function() {
-      console.log('Node HTTP server is listening');
+// //http://crawlr.ngrok.com/route/bar%20blue
+app.get('/route/:bar', function(req, res){
+
+	var bar = req.param("bar");
+	function puts(error, stdout, stderr) { sys.puts(stdout) }
+	exec("rscript sample.R \"" + bar + "\"", puts);
+
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.write('Processing')
+    res.end();
+});
+
+
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
 });

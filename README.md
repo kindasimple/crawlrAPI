@@ -28,18 +28,28 @@ Web Interface                 127.0.0.1:4040
 # Conn                        0                                             
 Avg Conn Time                 0.00ms
 ```
+The run script does two things. It runs a local website that serves the Solver API at localhost:5002 
+
+```
+node worker.js &
+```
+and it exposes this server to the internet via ngrok at http://crawlr.ngrok.com
+
+```
+./ngrok -subdomain=crawlr -authtoken hdqL9zl1QZrLl8c84HzX 5002
+```
 
 ### Endpoings
 
-**/process/:start_bar**
+**/route/start_bar**
 
-Input the starting bar, and pass it to the R script.
+Input the starting bar, and pass it to the R script. It creates and returns a guid used to name the file.
 
 ```
-exec("rscript worker.R \"Pickles\"", puts);
+exec("rscript worker.R \"Pickles\"" + id, puts);
 ```
 
-the R script takes the command line argument, and runs the search. The ouput is then written to a file.
+the R script takes the command line argument, runs the search, and creates . The ouput is then written to a file.
 
 ```
 args <- commandArgs(trailingOnly = TRUE)
