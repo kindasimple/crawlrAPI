@@ -1,6 +1,6 @@
 crawlrAPI
 =========
-[![Build Status](https://travis-ci.org/kindasimple/crawlrapi.svg?branch=master)](https://travis-ci.org/kindasimple/crawlrapi)
+[![Build Status](https://travis-ci.org/kindasimple/crawlrAPI.svg?branch=master)](https://travis-ci.org/kindasimple/crawlrAPI)
 
 API for crawlr application. Its primary functions are to
 
