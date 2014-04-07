@@ -30,7 +30,9 @@ app.use(function(req, res, next) {
       next();
     });
 app.use(app.router);
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'tmp')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -76,7 +78,7 @@ function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
          s4() + '-' + s4() + s4() + s4();
 }
-
+var tempFilePath = "./tmp/";
 // //http://crawlr.ngrok.com/route/bar%20blue
 app.get('/route/:bar', function(req, res){
 
@@ -84,7 +86,7 @@ app.get('/route/:bar', function(req, res){
 
 	var uuid = guid();
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
-	exec("rscript scripts/branchandboundproto.R ./public/ " + uuid + " \"" + bar + "\"", puts);
+	exec("rscript scripts/branchandboundproto.R {0} {1} \"{2}\"", tempFilePath, uuid, bar, puts);
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.write(uuid)
@@ -102,7 +104,7 @@ app.post('/route/:bar', function(req, res){
 	var bar = req.param("bar");
 	var uuid = guid();
 
-	var command = util.format("rscript scripts/branchandboundproto.R ./public/ \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"", uuid, bar, survey.cost, survey.alcohol, survey.distance)
+	var command = util.format("rscript scripts/branchandboundproto.R {5} \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"", uuid, bar, survey.cost, survey.alcohol, survey.distance, tempFilePath)
 
 
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
@@ -118,7 +120,7 @@ app.get('/result/:guid', function(req, res){
 
 	var id = req.param("guid");
 	var extension = req.param("extension");
-	var filePath = './public/' + id + '.log';
+	var filePath = tempFilePath + id + '.log';
 	fs.exists(filePath, function(exists) {
 
 	  if (exists) {
@@ -143,7 +145,7 @@ app.get('/result/:guid/:extension', function(req, res){
 
 	var id = req.param("guid");
 	var extension = req.param("extension");
-	var filePath = './public/' + id + '.log';
+	var filePath = tempFilePath + id + '.log';
 	fs.exists(filePath, function(exists) {
 
 	  if (exists) {
