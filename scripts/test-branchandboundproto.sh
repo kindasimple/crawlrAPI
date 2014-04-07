@@ -1,3 +1,3 @@
 #!/bin/bash
 #cd "../$(dirname "$0")"
-rscript branchandboundproto.R "./" 123 Inferno
+rscript "$(dirname "$0")/"branchandboundproto.R "./tmp/" 123 Inferno
