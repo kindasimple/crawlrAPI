@@ -1,1 +1,0 @@
-rscript branchandboundproto.R "Inferno" 123

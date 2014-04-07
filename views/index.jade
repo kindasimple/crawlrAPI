@@ -2,4 +2,120 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  :markdown
+    ##Endpoints
+    
+    **Endpoint to generate Request for Route from Inferno**
+
+    [route/Inferno](/route/Inferno)
+
+
+    A http get request for /route/Inferno will respond with a GUID
+
+    ```
+    dd7f6b2f-14d2-577c-79a8-fa4a886f4704
+    ```
+
+    An http post request for /route/Inferno will process a query configured with some survey values for user preferences.
+
+    ```
+    curl -d "cost=50&alcohol=30&distance=39" http://crawlrAPI.ngrok.com/route/Inferno
+    ```
+
+    **Endpoint to get result of route request**
+
+    [/result/\[ guid \]](result/)
+    
+    A request for `/result/dd7f6b2f-14d2-577c-79a8-fa4a886f4704` produces the following response
+
+    ```
+    Inferno
+    Z.Bar...The.Deli
+    Gingerbread.Man
+    Bar.Bleu
+    The.Saloon
+    Rotellis
+    The.Tavern.Restaurant
+    The.Rathskeller
+    Darkhorse.Tavern
+    Chilis
+
+    ...
+
+    Inferno
+    Z.Bar...The.Deli
+    Gingerbread.Man
+    Bar.Bleu
+    The.Saloon
+    Rotellis
+    The.Tavern.Restaurant
+    The.Rathskeller
+    Chumleys
+    Allen.St..Grill
+    ```
+
+    **Optional JSON**
+
+    Optionally, adding `/.json` to the end of the http request will produce json.
+
+    The request /result/dd7f6b2f-14d2-577c-79a8-fa4a886f4704/.json produces 
+
+    ```
+    {
+    tours: [
+    {
+    bars: [
+    "Inferno",
+    "Z.Bar...The.Deli",
+    "Gingerbread.Man",
+    "Bar.Bleu",
+    "The.Saloon",
+    "Rotellis",
+    "The.Tavern.Restaurant",
+    "The.Rathskeller",
+    "Darkhorse.Tavern",
+    "Chilis"
+    ],
+    title: "The Best Tour for you"
+    },
+    {
+    bars: [
+    "Inferno",
+    "Z.Bar...The.Deli",
+    "Gingerbread.Man",
+    "Lions.Den",
+    "The.Saloon",
+    "Rotellis",
+    "The.Tavern.Restaurant",
+    "The.Rathskeller",
+    "Darkhorse.Tavern",
+    "Chilis"
+    ],
+    title: "The Best Tour with PageRank Considerations"
+    },
+    {
+    bars: [
+    "Inferno",
+    "Z.Bar...The.Deli",
+    "Gingerbread.Man",
+    "Bar.Bleu",
+    "The.Saloon",
+    "Rotellis",
+    "The.Tavern.Restaurant",
+    "The.Rathskeller",
+    "Chumleys",
+    "Allen.St..Grill",
+    ""
+    ],
+    title: "The second Best Tour with PageRank Considerations"
+    }
+    ]
+    }
+    ```
+
+    **Endpoint to get network image**
+
+    /[GUID].png
+
+    this returns a route visualization of the bar tour that was created by the R script.
+    ![Graph](/images/network-graph.png)

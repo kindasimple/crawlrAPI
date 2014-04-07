@@ -12,6 +12,7 @@ var path = require('path');
 var sys = require('sys')
 var exec = require('child_process').exec;
 var fs = require('fs');
+var util = require('util')
 var app = express();
 
 // all environments
@@ -23,6 +24,11 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(function(req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-With");
+      next();
+    });
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -35,43 +41,137 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 var toJson = function (data) {
-	return { 
-		bars: data.split('\n') 
-	};
+	var result = { tours: []};
+  	//parse output and create json
+  	data.split("\n\n").forEach(function (line) {
+  		var tour = { bars: [] };
+  			tour.title = "";
+			line.split('\n').forEach(function (bar) {
+				tour.bars.push(bar);
+			});
+			result.tours.push(tour);
+  	})
+
+  	result.tours[0].title = 'The Best Tour for you';
+  	result.tours[1].title = 'The Best Tour with PageRank Considerations';
+  	result.tours[2].title = 'The second Best Tour with PageRank Considerations';
+	return JSON.stringify(result);
 }
 
-//http://crawlr.ngrok.com/route/bar%20blue/result
-app.get('/route/result/:bar', function(req, res){
-
-	var bar = req.param("bar");
-
-	fs.readFile('./public/' + bar + '.log', 'utf8', function (err,data) {
-		if (err) {
-			return console.log(err);
-		}
-
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.write(data);
-		res.end();
-	});
-
-
-});
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+}
 
 // //http://crawlr.ngrok.com/route/bar%20blue
 app.get('/route/:bar', function(req, res){
 
 	var bar = req.param("bar");
+
+	var uuid = guid();
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
-	exec("rscript sample.R \"" + bar + "\"", puts);
+	exec("rscript scripts/branchandboundproto.R ./public/ " + uuid + " \"" + bar + "\"", puts);
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.write('Processing')
+    res.write(uuid)
     res.end();
 });
+
+app.post('/route/:bar', function(req, res){
+	var survey = {};
+	survey.cost = parseInt(req.body.cost);
+	survey.alcohol = parseInt(req.body.alcohol);
+	survey.distance = parseInt(req.body.distance);
+
+	console.log(survey);
+
+	var bar = req.param("bar");
+	var uuid = guid();
+
+	var command = util.format("rscript scripts/branchandboundproto.R ./public/ \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"", uuid, bar, survey.cost, survey.alcohol, survey.distance)
+
+
+	function puts(error, stdout, stderr) { sys.puts(stdout) }
+	exec(command, puts);
+
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.write(uuid)
+    res.end();
+});
+
+//http://crawlr.ngrok.com/route/bar%20blue/result
+app.get('/result/:guid', function(req, res){
+
+	var id = req.param("guid");
+	var extension = req.param("extension");
+	var filePath = './public/' + id + '.log';
+	fs.exists(filePath, function(exists) {
+
+	  if (exists) {
+		fs.readFile(filePath, 'utf8', function (err,data) {
+			if (err) {
+			  res.status(500).send('Server Error. Unable to read result.')
+			  return console.log(err);
+		    }
+
+		      res.writeHead(200, {'Content-Type': 'application/json'});
+		      res.write(data);
+		      
+		      res.end();
+	      });
+	  } else { //file doesn't exist
+	    res.status(404).send('Result not found. Your request is still processing.');
+	  }
+	}); //fs.exists
+});
+
+app.get('/result/:guid/:extension', function(req, res){
+
+	var id = req.param("guid");
+	var extension = req.param("extension");
+	var filePath = './public/' + id + '.log';
+	fs.exists(filePath, function(exists) {
+
+	  if (exists) {
+		fs.readFile(filePath, 'utf8', function (err,data) {
+			if (err) {
+			  res.status(500).send('Server Error. Unable to read result.')
+			  return console.log(err);
+		    }
+
+		      res.writeHead(200, {'Content-Type': 'application/json'});
+		      if(extension == null) {
+		      	res.write(data);
+		      } else {
+		      	res.write(toJson(data));
+		      }
+		      
+		      res.end();
+	      });
+	  } else { //file doesn't exist
+	    res.status(404).send('Result not found. Your request is still processing.');
+	  }
+	}); //fs.exists
+});
+
 
 
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+  var ngrok = require('ngrok');
+
+  ngrok.connect({
+        authtoken: process.env.NGROK_TOKEN,
+        subdomain: 'crawlrapi',
+        port: process.env.PORT || 5000
+  }, function (err, url) {
+    console.log("public url: " + url)
+        // https://susanna.ngrok.com -> 127.0.0.1:8080 with http auth required
+  });
 });
