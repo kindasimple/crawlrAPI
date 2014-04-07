@@ -1,5 +1,6 @@
 crawlrAPI
 =========
+[![Build Status](https://travis-ci.org/kindasimple/crawlrapi.svg?branch=master)](https://travis-ci.org/kindasimple/crawlrapi)
 
 API for crawlr application. Its primary functions are to
 
@@ -79,6 +80,6 @@ This endpoint reads the result of the search from a file on the disk, and serves
 
 **Network Graph**
 
-An image is generated as a png in the public folder, and can be accessed as `http://crawlrAPI.ngrok.com/[guid].png 
+An image is generated as a png in the public folder, and can be accessed as http://crawlrAPI.ngrok.com/[guid].png 
 
 ![Network Graph](http://crawlr.ngrok.com/images/network-graph.png)

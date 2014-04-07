@@ -35,6 +35,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+    var ngrok = require('ngrok');
+
+	ngrok.connect({
+	    authtoken: process.env.NGROK_TOKEN,
+	    subdomain: 'crawlrapi',
+	    port: process.env.PORT || 5000
+	}, function (err, url) {
+		console.log("public url: " + url)
+	});
 }
 
 app.get('/', routes.index);
@@ -164,14 +173,4 @@ app.get('/result/:guid/:extension', function(req, res){
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
-  var ngrok = require('ngrok');
-
-  ngrok.connect({
-        authtoken: process.env.NGROK_TOKEN,
-        subdomain: 'crawlrapi',
-        port: process.env.PORT || 5000
-  }, function (err, url) {
-    console.log("public url: " + url)
-        // https://susanna.ngrok.com -> 127.0.0.1:8080 with http auth required
-  });
 });
