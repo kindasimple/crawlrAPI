@@ -36,7 +36,10 @@ app.use(express.static(path.join(__dirname, 'tmp')));
 
 // development only
 if ('development' == app.get('env')) {
+
   app.use(express.errorHandler());
+  
+  if(process.env.NGROK_TOKEN){
     var ngrok = require('ngrok');
 
 	ngrok.connect({
@@ -46,7 +49,9 @@ if ('development' == app.get('env')) {
 	}, function (err, url) {
 		console.log("public url: " + url)
 	});
+  }
 }
+
 
 app.get('/', routes.index);
 app.get('/users', user.list);
@@ -86,7 +91,9 @@ app.get('/route/:bar', function(req, res){
 
 	var uuid = guid();
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
-	exec("rscript scripts/branchandboundproto.R {0} {1} \"{2}\"", tempFilePath, uuid, bar, puts);
+	var cmd = util.format("scripts/runSearch.sh %s %s \"%s\"", tempFilePath, uuid, bar)
+	console.log(cmd)
+	exec(cmd, puts);
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.write(uuid)
@@ -104,9 +111,9 @@ app.post('/route/:bar', function(req, res){
 	var bar = req.param("bar");
 	var uuid = guid();
 
-	var command = util.format("rscript scripts/branchandboundproto.R {5} \"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"", uuid, bar, survey.cost, survey.alcohol, survey.distance, tempFilePath)
+	var command = util.format("scripts/runSearch.sh %s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"", tempFilePath, uuid, bar, survey.cost, survey.alcohol, survey.distance) 
 
-
+	console.log(command);
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
 	exec(command, puts);
 
