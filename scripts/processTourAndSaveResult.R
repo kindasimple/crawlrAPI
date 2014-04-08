@@ -300,7 +300,7 @@ dists2[count]=distscomplete[bartouralt[count],(bartouralt[count+1])]
 dists3[count]=distscomplete[bartouralt2[count],(bartouralt2[count+1])]
 }
 #par(mfrow=c(1,3))
-pdf(filename = imageFilename)
+pdf(file = imageFilename)
 plot(c(0,dists1),xaxt="n",type="l",xlim=c(.5,(nobot+3)),pch=2,col="red",lwd=2,xlab="",ylab="Distance Travelled (Meters)",main="Distance Traveled on Best Path");
 require(calibrate)
 textxy(X=seq(1,(nobot+1),1),Y=c(0,dists1),labs=bartour,cex=1.1)
