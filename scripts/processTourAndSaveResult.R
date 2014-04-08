@@ -7,7 +7,7 @@ alcohol <- args[5];
 distance <- args[6];
 
 filename <- paste(dest, guid, ".log", sep="")
-imageFilename <- paste(dest, guid, ".png", sep="")
+imageFilename <- paste(dest, guid, ".pdf", sep="")
 
 print("query settings")
 print("-------")
