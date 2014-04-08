@@ -17,6 +17,7 @@ print(paste("start: ", start))
 print(paste("filename: ", filename))
 print(paste("imageFileName: ", imageFilename))
 print(paste("working directory: ", getwd()))
+
 #Criteria
 #Distance, Cost, Crowdedness, Alcohol Choice, PageRank
 
@@ -25,12 +26,35 @@ print(paste("working directory: ", getwd()))
 #Distances is an nxn matrix 
 
 #User Defined Parameters
-nobot=10  #max number of bars on tour
+#nobot=10  #max number of bars on tour
 #Preferences 1-10
-costpref=round(cost/10,0)
-crowdpref=4
-alcpref=2#
-startingbar=start
+#costpref=10
+#crowdpref=4
+#alcpref=2#
+#startingbar="Inferno"
+nobot=10
+costpref=10
+alcpref=3
+crowdpref=2
+
+is.defined = function(x){ !is.null(x) && !is.na(x) }
+if(is.defined(cost)){
+    costpref<-round(as.numeric(cost)/10,0)
+    print(costpref)
+    if(costpref==0) { costpref <- 1 }
+}
+
+# if(is.defined(crowd)){
+#     crowdpref=round(as.numeric(crowd)/10,0)
+#     if(crowdpref==0) { crowdpref <- 1 }
+# }
+
+if(is.defined(alcohol)){
+    alcpref=round(as.numeric(alcohol)/10,0)
+    if(alcpref==0) { alcpref <- 1 }
+}
+startingbar <- start
+
 #Pagerank is outside of user control.
 nobot=nobot-1
 #Lets generate sample data matrices:
@@ -277,10 +301,11 @@ dists3[count]=distscomplete[bartouralt2[count],(bartouralt2[count+1])]
 }
 #par(mfrow=c(1,3))
 png(filename = imageFilename)
-plot(c(0,dists1),xaxt="n",type="l",xlim=c(.5,nobot+1.5),pch=3,col="red",lwd=2,xlab="",ylab="Distance Travelled (Meters)",main="Distance Traveled on Best Path");
-#axis(1,at=1:(nobot+1),labs=bartour,font=2)
+plot(c(0,dists1),xaxt="n",type="l",xlim=c(.5,(nobot+3)),pch=2,col="red",lwd=2,xlab="",ylab="Distance Travelled (Meters)",main="Distance Traveled on Best Path");
 require(calibrate)
-textxy(X=seq(1,(nobot+1),1),Y=c(0,dists1),labs=bartour,cex=.9)
+textxy(X=seq(1,(nobot+1),1),Y=c(0,dists1),labs=bartour,cex=1.1)
+dev.off()
+#axis(1,at=1:(nobot+1),labs=bartour,font=2)
 #plot(as.ts(dists2),xaxt="n");
 #plot(as.ts(dists3),xaxt="n")
 sink("bartour.txt")
@@ -303,12 +328,8 @@ sink("bartour.txt")
 sink()
 
 
-
 write(bartour, filename,append=TRUE)
 write("",file=filename,append=TRUE)
 write(bartouralt, filename,append=TRUE)
 write("",file=filename,append=TRUE)
 write(bartouralt2, filename,append=TRUE)
-
-#dev.copy(png,filename=imageFilename,height=600, width=800,bg="white")
-dev.off()
