@@ -26,8 +26,10 @@ npm install
 3. Create an .env file with the following content
 
 ```
-PORT=5001
-NGROK_TOKEN=hdqL9zl1QZrLl8c84HzX
+PORT=5001 #change the port to avoid local conflicts
+NODE_ENV=development #configure the app for development
+NGROK_TOKEN=[your account token] #pass a token to start ngrok service
+NGROK_SUBDOMAIN=crawlrapi #configure ngrok url
 ```
 
 4. Install R packages
@@ -49,7 +51,7 @@ ipak(packages)
 
 
 
-Execute `foreman start` to start the worker website, and expose it using ngrok. 
+Execute `foreman start` to start the worker website. If your NODE_ENV is set to "development", ngrok will open a tunnel for you. 
 
 ```
 $ foreman start
@@ -61,7 +63,7 @@ $ foreman start
 
 ### API Documentation
 
-Documentation can be found on the site index page. [crawlrapi.ngrok.com](http://crawlrapi.ngrok.com)
+Documentation can be found on the site index page. [crawlrapi.herokuapp.com](http://crawlrapi.herokuapp.com)
 
 **/route/:start_bar**
 
@@ -80,6 +82,6 @@ This endpoint reads the result of the search from a file on the disk, and serves
 
 **Network Graph**
 
-An image is generated as a png in the public folder, and can be accessed as http://crawlrAPI.ngrok.com/[guid].png 
+An image is generated as a png in the public folder, and can be accessed as http://crawlrAPI.herokuapp.com/[guid].png 
 
-![Network Graph](http://crawlr.ngrok.com/images/network-graph.png)
+![Network Graph](http://crawlrapi.herokuapp.com/images/network-graph.png)

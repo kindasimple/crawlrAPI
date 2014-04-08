@@ -44,7 +44,7 @@ if ('development' == app.get('env')) {
 
 	ngrok.connect({
 	    authtoken: process.env.NGROK_TOKEN,
-	    subdomain: 'crawlrapi',
+	    subdomain: process.env.NGROK_SUBDOMAIN || 'crawlrapi',
 	    port: process.env.PORT || 5000
 	}, function (err, url) {
 		console.log("public url: " + url)
