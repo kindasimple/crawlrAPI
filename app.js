@@ -63,7 +63,9 @@ var toJson = function (data) {
   		var tour = { bars: [] };
   			tour.title = "";
 			line.split('\n').forEach(function (bar) {
-				tour.bars.push(bar);
+				if(bar !== ""){
+					tour.bars.push(bar);
+				}
 			});
 			result.tours.push(tour);
   	})
