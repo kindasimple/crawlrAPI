@@ -107,13 +107,14 @@ app.post('/route/:bar', function(req, res){
 	survey.cost = parseInt(req.body.cost);
 	survey.alcohol = parseInt(req.body.alcohol);
 	survey.distance = parseInt(req.body.distance);
+	survey.length = parseInt(req.body.length);
 
 	console.log(survey);
 
 	var bar = req.param("bar");
 	var uuid = guid();
 
-	var command = util.format("scripts/runSearch.sh %s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"", tempFilePath, uuid, bar, survey.cost, survey.alcohol, survey.distance) 
+	var command = util.format("scripts/runSearch.sh %s \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"", tempFilePath, uuid, bar, survey.cost, survey.alcohol, survey.distance, survey.length) 
 
 	console.log(command);
 	function puts(error, stdout, stderr) { sys.puts(stdout) }
