@@ -5,6 +5,7 @@ start <- args[3];
 cost <- args[4];
 alcohol <- args[5];
 distance <- args[6];
+length <- args[7];
 
 filename <- paste(dest, guid, ".log", sep="")
 imageFilename <- paste(dest, guid, ".pdf", sep="")
@@ -32,7 +33,7 @@ print(paste("working directory: ", getwd()))
 #crowdpref=4
 #alcpref=2#
 #startingbar="Inferno"
-nobot=10
+nobot=as.numeric(length)
 costpref=10
 alcpref=3
 crowdpref=2
@@ -56,7 +57,7 @@ if(is.defined(alcohol)){
 startingbar <- start
 
 #Pagerank is outside of user control.
-nobot=nobot-1
+nobot= round(nobot,0)-1
 #Lets generate sample data matrices:
 #bars=c('Allen St. Grill','Bar Bleu','The Brewery','Café 210','Chilis','Chrome','Chumleys','Darkhorse Tavern','Gingerbread Man','Indigo','Inferno','Kildares', 'Levels','Lions Den','Local Whiskey',
 #'Mad Mex','The Phyrst','Bill Pickles Tap Room', 'The Rathskeller','Rotellis','Rumors Lounge','The Saloon','The Shandygaff','The Tavern Restaurant','Z Bar @ The Deli','Zenos') 

@@ -5,6 +5,7 @@ start <- args[3];
 cost <- args[4];
 alcohol <- args[5];
 distance <- args[6];
+length <- args[7];
 
 filename <- paste(dest, guid, ".log", sep="")
 imageFilename <- paste(dest, guid, ".png", sep="")
@@ -25,7 +26,7 @@ print(paste("working directory: ", getwd()))
 #Distances is an nxn matrix 
 
 #User Defined Parameters
-nobot=10  #max number of bars on tour
+nobot=as.numeric(length)  #max number of bars on tour
 #Preferences 1-10
 costpref=round(cost/10,0)
 crowdpref=4
