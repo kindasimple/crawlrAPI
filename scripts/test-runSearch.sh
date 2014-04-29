@@ -1,3 +1,3 @@
 #!/bin/bash
 
-"$(dirname "$0")/"runSearch.sh "./tmp/" "123" "Inferno" "40" "23" "34"
+"$(dirname "$0")/"runSearch.sh "./tmp/" "123" "Inferno" "40" "23" "34" "5"
